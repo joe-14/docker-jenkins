@@ -1,0 +1,31 @@
+
+docker exec -u 0 -it jenkins-blueocean bash
+
+sudo docker -H tcp://0.0.0.0:2375 -d &
+
+apt-get update && \apt-get -y install sudo
+
+
+docker run -d --restart=always -p 127.0.0.1:2376:2375 --network jenkins -v /var/run/docker.sock:/var/run/docker.sock alpine/socat tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+
+
+docker inspect 9f712084bd3c | grep IPAddress
+
+docker uri:
+tcp://host.docker.internal:2376/
+
+nmap host.docker.internal -p 2376
+
+
+apt-get update
+apt-get install nmap -y
+
+
+
+This command create a container which acts as a mediator between the docker host and jenkins container
+docker run -d --restart=always -p 127.0.0.1:2376:2375 --network jenkins -v /var/run/docker.sock:/var/run/docker.sock jenkins/ssh-agent:latest-alpine-jdk11 tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
+
+
+docker image in jenkins docker agent template : jenkins/ssh-agent:latest-alpine-jdk11
+
+Remote file system root : /home/jenkins
